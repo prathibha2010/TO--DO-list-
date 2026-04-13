@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>To Do List</title>
+
+    <style>
+        body {
+            font-family: Arial;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: linear-gradient(135deg, #5f9cff, #a18cd1);
+        }
+
+        .container {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            width: 320px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        h2 {
+            color:hotpink;
+        }
+
+        input {
+            margin: 5px;
+            padding: 8px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+        }
+
+        button {
+            padding: 8px;
+            border: none;
+            border-radius: 8px;
+            background: #5f9cff;
+            color: white;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #3b7be0;
+        }
+
+        li {
+            list-style: none;
+            margin: 10px 0;
+            padding: 8px;
+            border-radius: 8px;
+            background: #f5f7ff;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        li button {
+            background: #ff6b6b;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+    <h2>📋 To Do List 🥰🥰</h2>
+
+    <input type="text" id="taskInput" placeholder="Enter task">
+    <input type="time" id="timeInput">
+    <br>
+    <button onclick="addTask()">Add Task</button>
+
+    <ul id="taskList"></ul>
+</div>
+
+<script>
+    let tasks = [];
+
+    function addTask() {
+        let text = document.getElementById("taskInput").value;
+        let time = document.getElementById("timeInput").value;
+
+        if (text === "" || time === "") return;
+
+        let task = { text: text, time: time, alerted: false };
+        tasks.push(task);
+
+        displayTasks();
+
+        document.getElementById("taskInput").value = "";
+    }
+
+    function displayTasks() {
+        let list = document.getElementById("taskList");
+        list.innerHTML = "";
+
+        tasks.forEach((task, index) => {
+            let li = document.createElement("li");
+
+            li.innerHTML = `
+                ${task.text} (${task.time})
+                <button onclick="deleteTask(${index})">X</button>
+            `;
+
+            list.appendChild(li);
+        });
+    }
+
+    function deleteTask(index) {
+        tasks.splice(index, 1);
+        displayTasks();
+    }
+
+    // ⏰ Reminder system
+    setInterval(() => {
+        let now = new Date();
+        let currentTime = now.toTimeString().slice(0,5);
+
+        tasks.forEach(task => {
+            if (task.time === currentTime && !task.alerted) {
+                alert("⏰ Reminder: " + task.text);
+                task.alerted = true; // prevents repeating
+            }
+        });
+    }, 1000);
+</script>
+
+</body>
+</html>
